@@ -72,6 +72,10 @@ class World {
         });
     }
 
+    /**
+     * Prüft, ob der Charakter mit einem Gegner kollidiert und reagiert entsprechend.
+     * @returns {void}
+     */
     checkCharacterEnemyCollisions() {
         this.level.enemies.forEach((enemy) => {
             if (!enemy.isDead() && this.character.isColliding(enemy)) {
