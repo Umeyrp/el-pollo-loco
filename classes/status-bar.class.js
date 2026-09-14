@@ -1,37 +1,37 @@
 /**
- * Basisklasse für alle Statusanzeigen (Leben, Münzen, Flaschen).
- * Wählt anhand eines Prozentwerts das passende Balken-Bild aus.
+ * Base class for all status displays (health, coins, and bottles).
+ * Selects the matching bar image based on a percentage value.
  * @extends DrawableObject
  */
 class StatusBar extends DrawableObject {
-    /** @type {number} Breite der Statusleiste in Pixel. */
+    /** @type {number} Width of the status bar in pixels. */
     width = 200;
 
-    /** @type {number} Höhe der Statusleiste in Pixel. */
+    /** @type {number} Height of the status bar in pixels. */
     height = 60;
 
-    /** @type {number} Aktueller Wert der Statusleiste (z.B. Energie, Münzen, Flaschen). */
+    /** @type {number} Current status bar value (e.g., energy, coins, or bottles). */
     percentage;
 
-    /** @type {number} Maximalwert, auf den sich "percentage" bezieht. */
+    /** @type {number} Maximum value to which "percentage" refers. */
     MAX_PERCENTAGE;
 
-    /** @type {string[]} Array der Bildpfade für die verschiedenen Füllstände. */
+    /** @type {string[]} Array of image paths for the different fill levels. */
     images;
 
-    /** @type {number} X-Position der Statusleiste. */
+    /** @type {number} X position of the status bar. */
     x;
 
-    /** @type {number} Y-Position der Statusleiste. */
+    /** @type {number} Y position of the status bar. */
     y;
 
     /**
-     * @param {string} path - Pfad zum initial anzuzeigenden Bild.
-     * @param {number} percentage - Startwert der Statusleiste.
-     * @param {number} MAX_PERCENTAGE - Maximalwert der Statusleiste.
-     * @param {number} x - X-Position.
-     * @param {number} y - Y-Position.
-     * @param {string[]} images - Bildpfade für die 6 Füllstände (0/20/40/60/80/100).
+     * @param {string} path - Path to the image shown initially.
+     * @param {number} percentage - Initial value of the status bar.
+     * @param {number} MAX_PERCENTAGE - Maximum value of the status bar.
+     * @param {number} x - X position.
+     * @param {number} y - Y position.
+     * @param {string[]} images - Image paths for the 6 fill levels (0/20/40/60/80/100).
      */
     constructor(path, percentage, MAX_PERCENTAGE, x, y, images) {
         super();
@@ -46,9 +46,9 @@ class StatusBar extends DrawableObject {
     }
 
     /**
-     * Aktualisiert den Prozentwert und wechselt bei Bedarf das angezeigte Bild
-     * auf den passenden, bereits vorgeladenen Cache-Eintrag.
-     * @param {number} percentage - Neuer Wert der Statusleiste.
+     * Updates the percentage value and, if needed, switches the displayed image
+     * to the matching preloaded cache entry.
+     * @param {number} percentage - New value of the status bar.
      * @returns {void}
      */
     setPercentage(percentage) {
@@ -67,9 +67,9 @@ class StatusBar extends DrawableObject {
     }
 
     /**
-     * Ermittelt anhand von percentage/MAX_PERCENTAGE den passenden Bildindex
-     * (0 = leer, 5 = voll) innerhalb des "images"-Arrays.
-     * @returns {number} Index zwischen 0 und 5.
+     * Determines the matching image index from percentage/MAX_PERCENTAGE within
+     * the "images" array (0 = empty, 5 = full).
+     * @returns {number} Index between 0 and 5.
      */
     resolveImageIndex() {
         if (this.percentage >= this.MAX_PERCENTAGE) return 5;

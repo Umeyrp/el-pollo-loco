@@ -1,36 +1,36 @@
 /**
- * Basisklasse für alle Objekte, die auf dem Canvas gezeichnet werden können.
- * Kümmert sich um Position, Bildladen und das eigentliche Zeichnen.
+ * Base class for all objects that can be drawn on the canvas.
+ * Handles positioning, image loading, and drawing.
  */
 class DrawableObject {
-    /** @type {number} X-Position des Objekts in Pixel. */
+    /** @type {number} X position of the object in pixels. */
     x = 120;
 
-    /** @type {number} Y-Position des Objekts in Pixel. */
+    /** @type {number} Y position of the object in pixels. */
     y = 290;
 
-    /** @type {HTMLImageElement} Aktuell angezeigtes Bild. */
+    /** @type {HTMLImageElement} Image currently displayed. */
     img;
 
-    /** @type {number} Höhe des Objekts in Pixel. */
+    /** @type {number} Height of the object in pixels. */
     height = 150;
 
-    /** @type {number} Breite des Objekts in Pixel. */
+    /** @type {number} Width of the object in pixels. */
     width = 100;
 
     /**
-     * Zwischenspeicher für bereits geladene Bilder, damit Animationsframes
-     * nicht mehrfach neu geladen werden müssen.
+     * Cache for images already loaded so animation frames do not need to be
+     * loaded repeatedly.
      * @type {Object.<string, HTMLImageElement>}
      */
     imageCache = {};
 
-    /** @type {number} Index des aktuellen Animationsframes. */
+    /** @type {number} Index of the current animation frame. */
     currentImage = 0;
 
     /**
-     * Zeichnet das aktuelle Bild des Objekts auf den übergebenen Canvas-Kontext.
-     * @param {CanvasRenderingContext2D} ctx - Der Zeichenkontext des Canvas.
+     * Draws the object's current image on the supplied canvas context.
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
      * @returns {void}
      */
     draw(ctx) {
@@ -38,8 +38,8 @@ class DrawableObject {
     }
 
     /**
-     * Lädt ein einzelnes Bild und setzt es als aktuelles Bild (this.img).
-     * @param {string} path - Pfad zur Bilddatei.
+     * Loads an individual image and sets it as the current image (this.img).
+     * @param {string} path - Path to the image file.
      * @returns {void}
      */
     loadImage(path) {
@@ -48,8 +48,8 @@ class DrawableObject {
     }
 
     /**
-     * Lädt mehrere Bilder vorab in den imageCache, z.B. für Animationen.
-     * @param {string[]} arr - Array von Bildpfaden.
+     * Preloads multiple images into the imageCache, e.g., for animations.
+     * @param {string[]} arr - Array of image paths.
      * @returns {void}
      */
     loadImages(arr) {
@@ -61,9 +61,9 @@ class DrawableObject {
     }
 
     /**
-     * Zeichnet (aktuell auskommentierte) Debug-Rahmen um Objekt und
-     * dessen Hitbox-Offset. Nur für ausgewählte Objekttypen relevant.
-     * @param {CanvasRenderingContext2D} ctx - Der Zeichenkontext des Canvas.
+     * Draws currently commented-out debug borders around the object and its
+     * hitbox offset. Relevant only for selected object types.
+     * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
      * @returns {void}
      */
     drawFrame(ctx) {

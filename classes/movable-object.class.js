@@ -1,27 +1,27 @@
 /**
- * Erweitert DrawableObject um Bewegung, Physik (Schwerkraft), Kollisionsabfrage
- * und den generischen "Treffer"-Mechanismus (Schaden nehmen).
+ * Extends DrawableObject with movement, physics (gravity), collision detection,
+ * and the generic hit mechanism (taking damage).
  * @extends DrawableObject
  */
 class MovableObject extends DrawableObject {
-    /** @type {number} Bewegungsgeschwindigkeit in Pixel pro Frame. */
+    /** @type {number} Movement speed in pixels per frame. */
     speed = 0.15;
 
-    /** @type {boolean} Ob das Objekt horizontal gespiegelt gezeichnet wird (schaut nach links). */
+    /** @type {boolean} Whether the object is drawn mirrored horizontally (facing left). */
     otherDirection = false;
 
-    /** @type {number} Aktuelle vertikale Geschwindigkeit (für Sprung/Fall). */
+    /** @type {number} Current vertical speed (for jumping/falling). */
     speedY = 0;
 
-    /** @type {number} Wert, um den speedY pro Tick durch die Schwerkraft verringert wird. */
+    /** @type {number} Value by which gravity reduces speedY per tick. */
     acceleration = 2.5;
 
-    /** @type {number} Zeitstempel (ms) des letzten erhaltenen Treffers, für Hurt-Cooldown. */
+    /** @type {number} Timestamp (ms) of the last received hit, for the hurt cooldown. */
     lastHit = 0;
 
     /**
-     * Startet eine wiederkehrende Schwerkraftsimulation (60x pro Sekunde).
-     * Hebt/senkt das Objekt anhand von speedY und acceleration.
+     * Starts a recurring gravity simulation (60 times per second).
+     * Raises or lowers the object based on speedY and acceleration.
      * @returns {void}
      */
     applyGravity() {
@@ -40,9 +40,9 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Prüft, ob sich das Objekt über dem Boden befindet.
-     * ThrowableObject gilt immer als "über dem Boden" (fliegt/fällt permanent).
-     * @returns {boolean} true, wenn das Objekt sich in der Luft befindet.
+     * Checks whether the object is above the ground.
+     * ThrowableObject is always considered above the ground (it continually flies/falls).
+     * @returns {boolean} true if the object is in the air.
      */
     isAboveGround() {
         if (this instanceof ThrowableObject) {
@@ -52,9 +52,9 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Setzt das aktuelle Bild anhand des Animationsframe-Index und erhöht den Zähler.
-     * @param {string[]} images - Array von Bildpfaden der Animation.
-     * @returns {number} Der Index des tatsächlich angezeigten Frames.
+     * Sets the current image based on the animation frame index and increments the counter.
+     * @param {string[]} images - Array of animation image paths.
+     * @returns {number} The index of the frame actually displayed.
      */
     playAnimation(images) {
         let i = this.currentImage % images.length;
@@ -65,7 +65,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Löst einen Sprung aus, indem die vertikale Geschwindigkeit gesetzt wird.
+     * Triggers a jump by setting the vertical speed.
      * @returns {void}
      */
     jump() {
@@ -73,7 +73,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Bewegt das Objekt um "speed" nach rechts.
+     * Moves the object right by "speed".
      * @returns {void}
      */
     moveRight() {
@@ -81,7 +81,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Bewegt das Objekt um "speed" nach links.
+     * Moves the object left by "speed".
      * @returns {void}
      */
     moveLeft() {
@@ -89,10 +89,10 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Prüft, ob dieses Objekt (unter Berücksichtigung der Hitbox-Offsets)
-     * mit einem anderen MovableObject kollidiert.
-     * @param {MovableObject} mo - Das andere Objekt, gegen das geprüft wird.
-     * @returns {boolean} true, wenn sich die Hitboxen überschneiden.
+     * Checks whether this object collides with another MovableObject, taking
+     * hitbox offsets into account.
+     * @param {MovableObject} mo - The other object to check against.
+     * @returns {boolean} true if the hitboxes overlap.
      */
     isColliding(mo) {
         return (
@@ -124,9 +124,9 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Fügt dem Objekt Schaden zu, sofern der Hurt-Cooldown (350ms) abgelaufen ist.
-     * Spielt den Hurt-Sound und setzt bei Tod die Energie explizit auf 0.
-     * @param {number} damage - Menge an Schaden, die abgezogen wird.
+     * Damages the object if the hurt cooldown (350ms) has elapsed.
+     * Plays the hurt sound and explicitly sets energy to 0 on death.
+     * @param {number} damage - Amount of damage to subtract.
      * @returns {void}
      */
     hit(damage) {
@@ -143,8 +143,8 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Prüft, ob der letzte Treffer weniger als 0,5 Sekunden zurückliegt.
-     * @returns {boolean} true, während die Hurt-Animation gezeigt werden soll.
+     * Checks whether the last hit occurred less than 0.5 seconds ago.
+     * @returns {boolean} true while the hurt animation should be shown.
      */
     isHurt() {
         let timepassed = Date.now() - this.lastHit;
@@ -153,8 +153,8 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Prüft, ob die Energie des Objekts aufgebraucht ist.
-     * @returns {boolean} true, wenn energy <= 0 ist.
+     * Checks whether the object's energy is depleted.
+     * @returns {boolean} true if energy is less than or equal to 0.
      */
     isDead() {
         return this.energy <= 0;

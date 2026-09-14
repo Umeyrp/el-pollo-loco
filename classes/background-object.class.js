@@ -1,19 +1,19 @@
 /**
- * Repräsentiert ein statisches Hintergrund-Layer-Bild (z.B. Himmel, Berge, Boden).
- * Wird typischerweise mehrfach nebeneinander instanziiert, um den Level-Hintergrund
- * lückenlos zu kacheln (Parallax-Layer).
+ * Represents a static background-layer image (e.g., sky, mountains, or ground).
+ * It is typically instantiated several times side by side to tile the level
+ * background seamlessly (parallax layer).
  * @extends MovableObject
  */
 class BackgroundObject extends MovableObject {
-    /** @type {number} Breite des Hintergrundbilds in Pixel. */
+    /** @type {number} Width of the background image in pixels. */
     width = 720;
 
-    /** @type {number} Höhe des Hintergrundbilds in Pixel. */
+    /** @type {number} Height of the background image in pixels. */
     height = 480;
 
     /**
-     * @param {string} imagePath - Pfad zum Hintergrundbild.
-     * @param {number} x - Horizontale Startposition des Layers.
+     * @param {string} imagePath - Path to the background image.
+     * @param {number} x - Initial horizontal position of the layer.
      */
     constructor(imagePath, x) {
         super().loadImage(imagePath);

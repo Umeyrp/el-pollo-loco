@@ -1,11 +1,11 @@
 /**
- * Die vom Spieler gesteuerte Spielfigur (Pepe). Kümmert sich um Bewegung,
- * Sprung, Flaschenwurf, Kollisionsreaktionen und alle Animationszustände
- * (Laufen, Springen, Verletzt, Tot, Schlafen).
+ * The player-controlled character (Pepe). Handles movement, jumping, bottle
+ * throwing, collision responses, and all animation states (walking, jumping,
+ * hurt, dead, and sleeping).
  * @extends MovableObject
  */
 class Character extends MovableObject {
-    /** @type {string[]} Bildpfade der Lauf-Animation. */
+    /** @type {string[]} Image paths for the walking animation. */
     IMAGES_WALKING = [
         "img/2_character_pepe/2_walk/W-21.png",
         "img/2_character_pepe/2_walk/W-22.png",
@@ -15,7 +15,7 @@ class Character extends MovableObject {
         "img/2_character_pepe/2_walk/W-26.png",
     ];
 
-    /** @type {string[]} Bildpfade der Sprung-Animation. */
+    /** @type {string[]} Image paths for the jumping animation. */
     IMAGES_JUMPING = [
         "img/2_character_pepe/3_jump/J-31.png",
         "img/2_character_pepe/3_jump/J-32.png",
@@ -28,7 +28,7 @@ class Character extends MovableObject {
         "img/2_character_pepe/3_jump/J-39.png",
     ];
 
-    /** @type {string[]} Bildpfade der Tod-Animation. */
+    /** @type {string[]} Image paths for the death animation. */
     IMAGES_DEAD = [
         "img/2_character_pepe/5_dead/D-51.png",
         "img/2_character_pepe/5_dead/D-52.png",
@@ -39,7 +39,7 @@ class Character extends MovableObject {
         "img/2_character_pepe/5_dead/D-57.png",
     ];
 
-    /** @type {string[]} Bildpfade der Verletzt-Animation. */
+    /** @type {string[]} Image paths for the hurt animation. */
     IMAGES_HURT = [
         "img/2_character_pepe/4_hurt/H-41.png",
         "img/2_character_pepe/4_hurt/H-42.png",
@@ -47,9 +47,9 @@ class Character extends MovableObject {
     ];
 
     /**
-     * Bildpfade der Schlaf-Animation. Die ersten 10 Bilder sind die
-     * "Einschlaf"-Sequenz, die restlichen 10 Bilder werden als Loop
-     * für den Tiefschlaf wiederholt (siehe playSleepingAnimation).
+     * Image paths for the sleeping animation. The first 10 images form the
+     * falling-asleep sequence; the remaining 10 loop during deep sleep
+     * (see playSleepingAnimation).
      * @type {string[]}
      */
     IMAGES_SLEEPING = [
@@ -75,32 +75,32 @@ class Character extends MovableObject {
         "img/2_character_pepe/1_idle/long_idle/I-20.png",
     ];
 
-    /** @type {number} Höhe des Charakters in Pixel. */
+    /** @type {number} Height of the character in pixels. */
     height = 280;
 
-    /** @type {number} Aktuelle Y-Position. */
+    /** @type {number} Current Y position. */
     y = 155;
 
-    /** @type {number} Y-Position, die als "Boden" für den Charakter gilt. */
+    /** @type {number} Y position considered the ground for the character. */
     GROUND_Y = 155;
 
-    /** @type {World} Referenz auf die World-Instanz (für Keyboard-Zugriff etc.), wird von außen gesetzt. */
+    /** @type {World} Reference to the World instance (for keyboard access, etc.), set externally. */
     world;
 
-    /** @type {number} Aktuelle Energie/Lebenspunkte. */
+    /** @type {number} Current energy/health points. */
     energy = 100;
 
-    /** @type {number} Maximale Energie/Lebenspunkte. */
+    /** @type {number} Maximum energy/health points. */
     MAX_ENERGY = 100;
 
-    /** @type {number} Anzahl der aktuell verfügbaren Wurfflaschen. */
+    /** @type {number} Number of throwable bottles currently available. */
     bottles = 0;
 
-    /** @type {number} Anzahl der gesammelten Münzen. */
+    /** @type {number} Number of collected coins. */
     coins = 0;
 
     /**
-     * Hitbox-Offsets des Charakters.
+     * Hitbox offsets for the character.
      * @type {{top: number, right: number, bottom: number, left: number}}
      */
     offset = {
@@ -110,27 +110,27 @@ class Character extends MovableObject {
         left: 20,
     };
 
-    /** @type {boolean} Ob aktuell die Lauf-Sound-Schleife aktiv ist. */
+    /** @type {boolean} Whether the walking sound loop is currently active. */
     isWalking;
 
-    /** @type {boolean} Ob der Charakter sich aktuell im Schlaf-Zustand befindet. */
+    /** @type {boolean} Whether the character is currently sleeping. */
     isSleeping = false;
 
-    /** @type {number} Index des aktuellen Frames innerhalb von IMAGES_SLEEPING. */
+    /** @type {number} Index of the current frame within IMAGES_SLEEPING. */
     sleepingFrameIndex = 0;
 
-    /** @type {number} Zeitstempel (ms) des zuletzt gewechselten Schlaf-Frames. */
+    /** @type {number} Timestamp (ms) of the last changed sleeping frame. */
     lastSleepingFrameTime = 0;
 
-    /** @type {number} Intervall-ID der Status-/Animationsschleife (checkStatusInterval). */
+    /** @type {number} Interval ID for the status/animation loop (checkStatusInterval). */
     statusInterval;
 
-    /** @type {number} Intervall-ID der Tastatur-Abfrageschleife (checkButtonInterval). */
+    /** @type {number} Interval ID for the keyboard polling loop (checkButtonInterval). */
     buttonsInterval;
 
     /**
-     * Lädt alle Animationsbilder, startet die Schwerkraft und die
-     * Eingabe-/Statusschleifen.
+     * Loads all animation images and starts gravity as well as the input and
+     * status loops.
      */
     constructor() {
         super();
@@ -146,7 +146,7 @@ class Character extends MovableObject {
     }
 
     /**
-     * Startet die beiden Kernschleifen: Tastatureingaben und Statusanimation.
+     * Starts the two core loops: keyboard input and status animation.
      * @returns {void}
      */
     animate() {
@@ -155,8 +155,8 @@ class Character extends MovableObject {
     }
 
     /**
-     * Fragt 60x pro Sekunde die Tastatur ab und löst entsprechend Bewegung,
-     * Sprung oder Flaschenwurf aus. Aktualisiert außerdem die Kameraposition.
+     * Polls the keyboard 60 times per second and triggers movement, jumping,
+     * or bottle throwing accordingly. It also updates the camera position.
      * @returns {void}
      */
     checkButtonInterval() {
@@ -186,10 +186,10 @@ class Character extends MovableObject {
     }
 
     /**
-     * Ermittelt die maximale X-Position, die der Charakter erreichen darf.
-     * Solange der Endboss lebt, wird verhindert, dass der Charakter in ihn
-     * hineinläuft (Begrenzung 40px vor dem Endboss).
-     * @returns {number} Maximal erlaubte X-Position.
+     * Determines the maximum X position the character may reach. As long as
+     * the final boss is alive, it prevents the character from walking into it
+     * (limited to 40px before the final boss).
+     * @returns {number} Maximum permitted X position.
      */
     getMaxReachableX() {
         const endboss = this.world.endboss;
@@ -200,9 +200,8 @@ class Character extends MovableObject {
     }
 
     /**
-     * Fragt 20x pro Sekunde den Zustand des Charakters ab (tot, verletzt,
-     * in der Luft, läuft, oder inaktiv) und spielt die jeweils passende
-     * Animation bzw. den passenden Sound.
+     * Checks the character's state 20 times per second (dead, hurt, in the
+     * air, walking, or idle) and plays the matching animation or sound.
      * @returns {void}
      */
     checkStatusInterval() {
@@ -234,8 +233,8 @@ class Character extends MovableObject {
     }
 
     /**
-     * Setzt den Schlaf-Zustand zurück und stoppt den Lauf-Sound.
-     * Sammel-Helfer für Zustände, in denen der Charakter definitiv nicht schläft/läuft.
+     * Resets the sleeping state and stops the walking sound. Shared helper for
+     * states in which the character is definitely not sleeping or walking.
      * @returns {void}
      */
     resetStatus() {
@@ -244,7 +243,7 @@ class Character extends MovableObject {
     }
 
     /**
-     * Pausiert den Lauf-Sound, falls er aktuell läuft.
+     * Pauses the walking sound if it is currently playing.
      * @returns {void}
      */
     stopWalkingSound() {
@@ -255,9 +254,9 @@ class Character extends MovableObject {
     }
 
     /**
-     * Wirft eine Flasche, sofern noch mindestens eine verfügbar ist und der
-     * Wurf-Cooldown (1000ms) abgelaufen ist. Erzeugt ein ThrowableObject,
-     * verringert den Flaschenbestand und aktualisiert die BottleBar.
+     * Throws a bottle if at least one is available and the throw cooldown
+     * (1000ms) has elapsed. Creates a ThrowableObject, reduces the bottle
+     * count, and updates the BottleBar.
      * @returns {void}
      */
     throwBottle() {
@@ -276,8 +275,7 @@ class Character extends MovableObject {
     }
 
     /**
-     * Setzt den Schlaf-Zustand zurück (z.B. bei Eingabe) und pausiert
-     * den Schnarch-Sound.
+     * Resets the sleeping state (e.g., on input) and pauses the snoring sound.
      * @returns {void}
      */
     resetSleepingState() {
@@ -288,9 +286,9 @@ class Character extends MovableObject {
     }
 
     /**
-     * Spielt die Schlaf-Animation ab: Zeigt alle 1000ms den nächsten Frame.
-     * Ab Erreichen der letzten 10 Frames wird in eine Endlosschleife
-     * gesprungen und der Schnarch-Sound gestartet.
+     * Plays the sleeping animation by showing the next frame every 1000ms.
+     * Once the final 10 frames are reached, it enters an infinite loop and
+     * starts the snoring sound.
      * @returns {void}
      */
     playSleepingAnimation() {
@@ -311,8 +309,8 @@ class Character extends MovableObject {
     }
 
     /**
-     * Initialisiert den Schlaf-Zustand einmalig (erster Frame), wenn der
-     * Charakter noch nicht als schlafend markiert ist.
+     * Initializes the sleeping state once (first frame) if the character is
+     * not yet marked as sleeping.
      * @returns {void}
      */
     setCharacterAsleep() {
@@ -326,8 +324,8 @@ class Character extends MovableObject {
     }
 
     /**
-     * Reaktion, wenn der Charakter von oben auf einen Gegner springt.
-     * @param {MovableObject} enemy - Der getroffene Gegner.
+     * Responds when the character jumps onto an enemy from above.
+     * @param {MovableObject} enemy - The enemy that was hit.
      * @returns {void}
      */
     jumpOnEnemy(enemy) {
@@ -335,8 +333,8 @@ class Character extends MovableObject {
     }
 
     /**
-     * Reaktion, wenn eine geworfene Flasche einen Gegner trifft.
-     * @param {MovableObject} enemy - Der getroffene Gegner.
+     * Responds when a thrown bottle hits an enemy.
+     * @param {MovableObject} enemy - The enemy that was hit.
      * @returns {void}
      */
     bottleHitEnemy(enemy) {
@@ -344,7 +342,7 @@ class Character extends MovableObject {
     }
 
     /**
-     * Spielt den Sound, der abgespielt wird, wenn der Charakter Schaden nimmt.
+     * Plays the sound used when the character takes damage.
      * @returns {void}
      */
     playHurtSound() {

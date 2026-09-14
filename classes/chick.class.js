@@ -1,35 +1,35 @@
 /**
- * Ein kleines, laufendes Küken-Gegnerobjekt (schneller, aber weniger Energie als Chicken).
+ * A small walking chick enemy (faster but with less energy than Chicken).
  * @extends MovableObject
  */
 class Chick extends MovableObject {
-    /** @type {number} Feste Y-Position (steht auf dem Boden). */
+    /** @type {number} Fixed Y position (standing on the ground). */
     y = 375;
 
-    /** @type {number} Höhe in Pixel. */
+    /** @type {number} Height in pixels. */
     height = 40;
 
-    /** @type {number} Breite in Pixel. */
+    /** @type {number} Width in pixels. */
     width = 40;
 
-    /** @type {number} Energie/Lebenspunkte des Kükens. */
+    /** @type {number} Energy/health points of the chick. */
     energy = 100;
 
-    /** @type {number} Zeitstempel (ms) des Todeszeitpunkts, 0 solange lebend. */
+    /** @type {number} Timestamp (ms) of the time of death; 0 while alive. */
     deadTime = 0;
 
-    /** @type {string[]} Bildpfade der Lauf-Animation. */
+    /** @type {string[]} Image paths for the walking animation. */
     IMAGES_WALKING = [
         "img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
         "img/3_enemies_chicken/chicken_small/1_walk/2_w.png",
         "img/3_enemies_chicken/chicken_small/1_walk/3_w.png",
     ];
 
-    /** @type {string[]} Bildpfad(e) der Tod-Animation. */
+    /** @type {string[]} Image path(s) for the death animation. */
     IMAGES_DEAD = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
 
     /**
-     * Hitbox-Offsets des Kükens.
+     * Hitbox offsets for the chick.
      * @type {{top: number, right: number, bottom: number, left: number}}
      */
     offset = {
@@ -40,8 +40,8 @@ class Chick extends MovableObject {
     };
 
     /**
-     * @param {number} baseX - Basis-X-Position; die tatsächliche Position erhält
-     *                          zusätzlich einen Zufallsversatz von 0-80px.
+     * @param {number} baseX - Base X position; the actual position also receives
+     *                          a random offset of 0–80px.
      */
     constructor(baseX) {
         super().loadImage("img/3_enemies_chicken/chicken_small/1_walk/1_w.png");
@@ -53,8 +53,8 @@ class Chick extends MovableObject {
     }
 
     /**
-     * Startet Bewegung (Laufen nach links, solange lebend) und die passende
-     * Animation (Lauf- bzw. Tod-Animation).
+     * Starts movement (walking left while alive) and the appropriate animation
+     * (walking or death animation).
      * @returns {void}
      */
     animate() {
@@ -73,7 +73,7 @@ class Chick extends MovableObject {
     }
 
     /**
-     * Spielt den Sound, der beim Tod dieses Gegnertyps abgespielt wird.
+     * Plays the sound used when this enemy type dies.
      * @returns {void}
      */
     playHurtSound() {

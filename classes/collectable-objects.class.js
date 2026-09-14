@@ -1,10 +1,10 @@
 /**
- * Basisklasse für einsammelbare Objekte im Level (Münzen, Flaschen).
+ * Base class for collectable objects in the level (coins and bottles).
  * @extends DrawableObject
  */
 class CollectableObject extends DrawableObject {
     /**
-     * Hitbox-Offsets relativ zu x/y/width/height, für präzisere Kollisionsabfrage.
+     * Hitbox offsets relative to x/y/width/height for more precise collision detection.
      * @type {{top: number, right: number, bottom: number, left: number}}
      */
     offset = {
@@ -15,10 +15,10 @@ class CollectableObject extends DrawableObject {
     };
 
     /**
-     * Setzt die X-Position basierend auf einer optionalen Basisposition plus
-     * einem Zufallsversatz, damit Objekte nicht exakt übereinander liegen.
-     * @param {number} [baseX] - Basis-X-Position. Ohne Angabe wird ein Zufallswert
-     *                            zwischen 300 und 900 verwendet.
+     * Sets the X position based on an optional base position plus a random offset,
+     * so objects do not overlap exactly.
+     * @param {number} [baseX] - Base X position. If omitted, a random value
+     *                            between 300 and 900 is used.
      */
     constructor(baseX) {
         super();

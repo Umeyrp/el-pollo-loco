@@ -1,11 +1,11 @@
 /**
- * Eine vom Charakter geworfene Flasche. Fliegt mit fester Beschleunigung
- * im Bogen und wechselt beim Bodenkontakt (oder Gegnertreffer) in die
- * "Splash"-Animation.
+ * A bottle thrown by the character. It flies in an arc with constant
+ * acceleration and switches to the
+ * splash animation when it touches the ground or hits an enemy.
  * @extends MovableObject
  */
 class ThrowableObject extends MovableObject {
-    /** @type {string[]} Bildpfade der Flugrotation der Flasche. */
+    /** @type {string[]} Image paths for the bottle's flying rotation. */
     IMAGES_FLYING = [
         "img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
         "img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
@@ -13,7 +13,7 @@ class ThrowableObject extends MovableObject {
         "img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png",
     ];
 
-    /** @type {string[]} Bildpfade der Zerplatz-Animation der Flasche. */
+    /** @type {string[]} Image paths for the bottle's splash animation. */
     IMAGES_SPLASH = [
         "img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png",
         "img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png",
@@ -24,7 +24,7 @@ class ThrowableObject extends MovableObject {
     ];
 
     /**
-     * Hitbox-Offsets der Flasche.
+     * Hitbox offsets for the bottle.
      * @type {{top: number, right: number, bottom: number, left: number}}
      */
     offset = {
@@ -34,19 +34,19 @@ class ThrowableObject extends MovableObject {
         left: 10,
     };
 
-    /** @type {number} Fallbeschleunigung der Flasche (überschreibt MovableObject-Wert). */
+    /** @type {number} Bottle falling acceleration (overrides the MovableObject value). */
     acceleration = 1.6;
 
-    /** @type {number} Anfangsgeschwindigkeit nach oben beim Wurf. */
+    /** @type {number} Initial upward speed when thrown. */
     speedY = 25;
 
-    /** @type {boolean} Ob die Flasche bereits aufgeschlagen ist / zerplatzt (Splash-Animation). */
+    /** @type {boolean} Whether the bottle has already hit something or splashed (splash animation). */
     splashed = false;
 
     /**
-     * @param {number} x - Startposition X (in der Regel Position des Charakters).
-     * @param {number} y - Startposition Y (in der Regel Position des Charakters).
-     * @param {boolean} otherDirection - Wurfrichtung: true = nach links, false = nach rechts.
+     * @param {number} x - Initial X position (usually the character's position).
+     * @param {number} y - Initial Y position (usually the character's position).
+     * @param {boolean} otherDirection - Throw direction: true = left, false = right.
      */
     constructor(x, y, otherDirection) {
         super();
@@ -65,8 +65,8 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Prüft fortlaufend, ob die Flasche den Boden erreicht hat, und markiert
-     * sie in diesem Fall als "splashed" sowie spielt den Aufprall-Sound.
+     * Continuously checks whether the bottle has reached the ground and, when
+     * it has, marks it as "splashed" and plays the impact sound.
      * @returns {void}
      */
     checkThrownBottlesHitGround() {
@@ -79,7 +79,7 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Spielt je nach Zustand (fliegend oder zerplatzt) die passende Animation.
+     * Plays the appropriate animation based on the state (flying or splashed).
      * @returns {void}
      */
     animate() {
@@ -93,7 +93,7 @@ class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Bewegt die Flasche horizontal in die Wurfrichtung.
+     * Moves the bottle horizontally in the throw direction.
      * @returns {void}
      */
     throw() {

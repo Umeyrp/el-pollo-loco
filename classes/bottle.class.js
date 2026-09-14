@@ -1,10 +1,10 @@
 /**
- * Eine auf dem Boden liegende, einsammelbare Salsa-Flasche.
+ * A collectable salsa bottle lying on the ground.
  * @extends CollectableObject
  */
 class Bottle extends CollectableObject {
     /**
-     * Hitbox-Offsets der liegenden Flasche.
+     * Hitbox offsets for the bottle lying on the ground.
      * @type {{top: number, right: number, bottom: number, left: number}}
      */
     offset = {
@@ -14,17 +14,17 @@ class Bottle extends CollectableObject {
         left: 35,
     };
 
-    /** @type {number} Feste Y-Position (liegt am Boden). */
+    /** @type {number} Fixed Y position (on the ground). */
     y = 345;
 
-    /** @type {number} Höhe der Flasche in Pixel. */
+    /** @type {number} Height of the bottle in pixels. */
     height = 80;
 
-    /** @type {number} Breite der Flasche in Pixel. */
+    /** @type {number} Width of the bottle in pixels. */
     width = 80;
 
     /**
-     * @param {number} [baseX] - Basis-X-Position (siehe CollectableObject).
+     * @param {number} [baseX] - Base X position (see CollectableObject).
      */
     constructor(baseX) {
         super(baseX);

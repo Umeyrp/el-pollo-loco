@@ -1,9 +1,9 @@
 /**
- * Statusleiste, die die Anzahl gesammelter/verfügbarer Flaschen anzeigt.
+ * Status bar that displays the number of collected or available bottles.
  * @extends StatusBar
  */
 class BottleBar extends StatusBar {
-    /** @type {string[]} Bildpfade der Flaschen-Statusleiste (grün). */
+    /** @type {string[]} Image paths for the green bottle status bar. */
     static IMAGES = [
         "img/7_statusbars/1_statusbar/3_statusbar_bottle/green/0.png",
         "img/7_statusbars/1_statusbar/3_statusbar_bottle/green/20.png",
@@ -14,10 +14,10 @@ class BottleBar extends StatusBar {
     ];
 
     /**
-     * @param {number} [percentage=0] - Startwert (Anzahl verfügbarer Flaschen).
-     * @param {number} MAX_PERCENTAGE - Maximale Anzahl Flaschen (z.B. MAX_BOTTLES).
-     * @param {number} [x=50] - X-Position der Anzeige.
-     * @param {number} [y=100] - Y-Position der Anzeige.
+     * @param {number} [percentage=0] - Initial value (number of available bottles).
+     * @param {number} MAX_PERCENTAGE - Maximum number of bottles (e.g., MAX_BOTTLES).
+     * @param {number} [x=50] - X position of the display.
+     * @param {number} [y=100] - Y position of the display.
      */
     constructor(percentage = 0, MAX_PERCENTAGE, x = 50, y = 100) {
         super(

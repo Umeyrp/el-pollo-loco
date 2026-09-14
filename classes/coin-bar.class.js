@@ -1,9 +1,9 @@
 /**
- * Statusleiste, die die Anzahl gesammelter Münzen anzeigt.
+ * Status bar that displays the number of collected coins.
  * @extends StatusBar
  */
 class CoinBar extends StatusBar {
-    /** @type {string[]} Bildpfade der Münzen-Statusleiste (grün). */
+    /** @type {string[]} Image paths for the green coin status bar. */
     static IMAGES = [
         "img/7_statusbars/1_statusbar/1_statusbar_coin/green/0.png",
         "img/7_statusbars/1_statusbar/1_statusbar_coin/green/20.png",
@@ -14,10 +14,10 @@ class CoinBar extends StatusBar {
     ];
 
     /**
-     * @param {number} [percentage=0] - Startwert (Anzahl gesammelter Münzen).
-     * @param {number} MAX_PERCENTAGE - Maximale Anzahl Münzen (z.B. MAX_COINS).
-     * @param {number} [x=50] - X-Position der Anzeige.
-     * @param {number} [y=50] - Y-Position der Anzeige.
+     * @param {number} [percentage=0] - Initial value (number of collected coins).
+     * @param {number} MAX_PERCENTAGE - Maximum number of coins (e.g., MAX_COINS).
+     * @param {number} [x=50] - X position of the display.
+     * @param {number} [y=50] - Y position of the display.
      */
     constructor(percentage = 0, MAX_PERCENTAGE, x = 50, y = 50) {
         super(

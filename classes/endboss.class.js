@@ -1,28 +1,28 @@
 /**
- * Der Endgegner des Levels. Läuft konstant nach links, bis er stirbt.
+ * The level's final boss. It constantly walks left until it dies.
  * @extends MovableObject
  */
 class Endboss extends MovableObject {
-    /** @type {number} Höhe in Pixel. */
+    /** @type {number} Height in pixels. */
     height = 500;
 
-    /** @type {number} Breite in Pixel. */
+    /** @type {number} Width in pixels. */
     width = 300;
 
-    /** @type {number} Feste Y-Startposition. */
+    /** @type {number} Fixed initial Y position. */
     y = -20;
 
-    /** @type {number} X-Startposition am Levelende. */
+    /** @type {number} Initial X position at the end of the level. */
     x = 1800;
 
-    /** @type {number} Aktuelle Energie/Lebenspunkte. */
+    /** @type {number} Current energy/health points. */
     energy = 750;
 
-    /** @type {number} Maximale Energie/Lebenspunkte. */
+    /** @type {number} Maximum energy/health points. */
     MAX_ENERGY = 750;
 
     /**
-     * Hitbox-Offsets des Endbosses.
+     * Hitbox offsets for the final boss.
      * @type {{top: number, right: number, bottom: number, left: number}}
      */
     offset = {
@@ -32,7 +32,7 @@ class Endboss extends MovableObject {
         left: 20,
     };
 
-    /** @type {string[]} Bildpfade der Lauf-Animation. */
+    /** @type {string[]} Image paths for the walking animation. */
     IMAGES_WALKING = [
         "img/4_enemie_boss_chicken/1_walk/G1.png",
         "img/4_enemie_boss_chicken/1_walk/G2.png",
@@ -40,14 +40,14 @@ class Endboss extends MovableObject {
         "img/4_enemie_boss_chicken/1_walk/G4.png",
     ];
 
-    /** @type {string[]} Bildpfade der Verletzt-Animation. */
+    /** @type {string[]} Image paths for the hurt animation. */
     IMAGES_HURT = [
         "img/4_enemie_boss_chicken/4_hurt/G21.png",
         "img/4_enemie_boss_chicken/4_hurt/G22.png",
         "img/4_enemie_boss_chicken/4_hurt/G23.png",
     ];
 
-    /** @type {string[]} Bildpfade der Tod-Animation. */
+    /** @type {string[]} Image paths for the death animation. */
     IMAGES_DEAD = [
         "img/4_enemie_boss_chicken/5_dead/G24.png",
         "img/4_enemie_boss_chicken/5_dead/G25.png",
@@ -55,8 +55,8 @@ class Endboss extends MovableObject {
     ];
 
     /**
-     * Lädt alle Animationsbilder, setzt eine zufällige Laufgeschwindigkeit
-     * und startet die Animation.
+     * Loads all animation images, sets a random walking speed, and starts
+     * the animation.
      */
     constructor() {
         super().loadImage(this.IMAGES_WALKING[0]);
@@ -68,8 +68,8 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Startet Bewegung (Laufen nach links, solange lebend) sowie die passende
-     * Animation je nach Zustand (Tod, verletzt, laufend).
+     * Starts movement (walking left while alive) and the appropriate animation
+     * for the current state (dead, hurt, or walking).
      * @returns {void}
      */
     animate() {
@@ -90,7 +90,7 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Spielt den Sound, der beim Treffer/Tod des Endbosses abgespielt wird.
+     * Plays the sound used when the final boss is hit or dies.
      * @returns {void}
      */
     playHurtSound() {

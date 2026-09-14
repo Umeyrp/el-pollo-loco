@@ -1,32 +1,32 @@
 /**
- * Fasst alle Objekte eines Spiellevels zusammen: Gegner, Wolken,
- * Hintergrundobjekte, geworfene Flaschen und einsammelbare Objekte.
+ * Combines all objects in a game level: enemies, clouds, background objects,
+ * thrown bottles, and collectable objects.
  */
 class Level {
-    /** @type {MovableObject[]} Alle Gegner des Levels (Chicken, Chick, Endboss). */
+    /** @type {MovableObject[]} All enemies in the level (Chicken, Chick, Endboss). */
     enemies;
 
-    /** @type {Cloud[]} Alle Wolken-Objekte des Levels. */
+    /** @type {Cloud[]} All cloud objects in the level. */
     clouds;
 
-    /** @type {BackgroundObject[]} Alle Hintergrund-Layer-Objekte des Levels. */
+    /** @type {BackgroundObject[]} All background-layer objects in the level. */
     backgroundObjects;
 
-    /** @type {ThrowableObject[]} Aktuell fliegende, vom Charakter geworfene Flaschen. */
+    /** @type {ThrowableObject[]} Bottles currently flying after being thrown by the character. */
     thrownBottles;
 
-    /** @type {CollectableObject[]} Einsammelbare Objekte (Münzen, Flaschen) im Level. */
+    /** @type {CollectableObject[]} Collectable objects (coins and bottles) in the level. */
     collectableObjects;
 
-    /** @type {number} X-Position, an der das Level als "beendet" gilt. */
+    /** @type {number} X position at which the level is considered complete. */
     level_end_x = 1500;
 
     /**
-     * @param {MovableObject[]} enemies - Gegner des Levels.
-     * @param {Cloud[]} clouds - Wolken-Objekte des Levels.
-     * @param {BackgroundObject[]} backgroundObjects - Hintergrund-Layer-Objekte.
-     * @param {ThrowableObject[]} thrownBottles - Initiale (meist leere) Liste geworfener Flaschen.
-     * @param {CollectableObject[]} collectableObjects - Einsammelbare Objekte des Levels.
+     * @param {MovableObject[]} enemies - Enemies in the level.
+     * @param {Cloud[]} clouds - Cloud objects in the level.
+     * @param {BackgroundObject[]} backgroundObjects - Background-layer objects.
+     * @param {ThrowableObject[]} thrownBottles - Initial (usually empty) list of thrown bottles.
+     * @param {CollectableObject[]} collectableObjects - Collectable objects in the level.
      */
     constructor(
         enemies,

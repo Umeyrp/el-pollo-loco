@@ -73,7 +73,7 @@ class World {
     }
 
     /**
-     * Prüft, ob der Charakter mit einem Gegner kollidiert und reagiert entsprechend.
+     * Checks whether the character collides with an enemy and responds accordingly.
      * @returns {void}
      */
     checkCharacterEnemyCollisions() {
