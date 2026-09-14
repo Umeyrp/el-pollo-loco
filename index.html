@@ -29,20 +29,49 @@
                 <div class="menu">
                     <button onclick="startGame()">Start Game</button>
                     <button onclick="showControls()">Controls</button>
-                    <a href="./impressum.html">
-                        <button>Imprint</button>
-                    </a>
+                    <button onclick="showImprint()">Imprint</button>
                 </div>
             </div>
             <div id="controlsOverlay" class="controls-overlay" hidden>
                 <div class="window">
                     <h2>Controls</h2>
                     <ul>
-                        <li><kbd>W</kbd> / <kbd>Space</kbd> — Jump</li>
+                        <li><kbd>W</kbd> — Jump</li>
                         <li><kbd>A</kbd> / <kbd>D</kbd> — Move Left/Right</li>
                         <li><kbd>S</kbd> — Throw Bottle</li>
                     </ul>
-                    <button onclick="hideControls()">Ok</button>
+                    <button onclick="hideControls()">Close</button>
+                </div>
+            </div>
+            <div id="imprintOverlay" class="controls-overlay" hidden>
+                <div class="window">
+                    <h2>Imprint</h2>
+                    <p>
+                        <strong>Responsible for content</strong><br />
+                        Muhammed Kemiksiz<br />
+                        Evastraße 8<br />
+                        Gelsenkirchen<br />
+                        Germany
+                    </p>
+                    <p>
+                        <strong>Contact</strong><br />
+                        Email: mu.kemiksiz@gmail.com
+                    </p>
+                    <p>
+                        <strong>Project</strong><br />
+                        El Pollo Loco
+                    </p>
+                    <p>
+                        <strong>Purpose</strong><br />
+                        This game was developed as part of a web development
+                        learning project.
+                    </p>
+                    <p>
+                        <strong>Assets</strong><br />
+                        Graphics, sounds and other media are used exclusively
+                        for educational purposes.
+                    </p>
+                    <button onclick="hideImprint()">Ok</button>
                 </div>
             </div>
             <div id="winscreen" hidden>

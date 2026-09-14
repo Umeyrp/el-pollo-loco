@@ -34,6 +34,20 @@ function hideControls() {
 }
 
 /**
+ * Displays the imprint overlay.
+ */
+function showImprint() {
+    document.querySelector("#imprintOverlay").hidden = false;
+}
+
+/**
+ * Hides the imprint overlay.
+ */
+function hideImprint() {
+    document.querySelector("#imprintOverlay").hidden = true;
+}
+
+/**
  * Shows the game-over screen and disables the touch controls.
  */
 function showGameoverScreen() {
@@ -194,3 +208,7 @@ function setupCanvasResolution() {
     const ctx = canvas.getContext("2d");
     ctx.scale(scale, scale);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateMuteIcon();
+});

@@ -92,13 +92,17 @@ class Sound {
      */
     static toggleMute() {
         Sound.isMuted = !Sound.isMuted;
-
+        localStorage.setItem("isMuted", Sound.isMuted);
         Sound.allSounds.forEach((sound) => {
             sound.muted = Sound.isMuted;
         });
-
         if (!Sound.isMuted) {
             Sound.playSound(Sound.BACKGROUND_MUSIC);
         }
     }
+
+    static isMuted =
+        localStorage.getItem("isMuted") !== null
+            ? localStorage.getItem("isMuted") === "true"
+            : true;
 }

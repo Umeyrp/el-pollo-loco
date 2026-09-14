@@ -13,7 +13,7 @@ class Endboss extends MovableObject {
     y = -20;
 
     /** @type {number} Initial X position at the end of the level. */
-    x = 1800;
+    x = 2300;
 
     /** @type {number} Current energy/health points. */
     energy = 750;

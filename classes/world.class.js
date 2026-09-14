@@ -10,6 +10,7 @@ class World {
     ctx;
     keyboard;
     camera_x = 0;
+    endbossHealthbarRevealed = false;
 
     healthBarCharacter = new HealthBar(
         this.character.energy,
@@ -19,8 +20,8 @@ class World {
     healthBarEndboss = new HealthBar(
         this.endboss.energy,
         this.endboss.MAX_ENERGY,
-        this.endboss.x + 55,
-        undefined,
+        450,
+        0,
         HealthBar.IMAGES_ENDBOSS,
     );
 
@@ -50,7 +51,6 @@ class World {
         setInterval(() => {
             this.checkGameOver();
             this.checkWin();
-            this.moveEndbossHealthbar();
             this.checkCollisions();
             this.removeOutOfWindowBottles();
             this.removeDeadEnemies();
@@ -78,10 +78,12 @@ class World {
     }
 
     /**
-     * Updates the position of the endboss health bar.
+     * Displays endboss healthbar on sight
      */
-    moveEndbossHealthbar() {
-        this.healthBarEndboss.x = this.endboss.x + 55;
+    isEndbossVisible() {
+        const canvasWidth = 720;
+        const screenX = this.endboss.x + this.camera_x;
+        return screenX + this.endboss.width > 0 && screenX < canvasWidth;
     }
 
     /**
@@ -226,7 +228,6 @@ class World {
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
-        this.addToMap(this.healthBarEndboss);
 
         this.ctx.translate(-this.camera_x, 0);
 
@@ -234,6 +235,12 @@ class World {
         this.addToMap(this.healthBarCharacter);
         this.addToMap(this.coinBar);
         this.addToMap(this.bottleBar);
+        if (this.isEndbossVisible()) {
+            this.endbossHealthbarRevealed = true;
+        }
+        if (this.endbossHealthbarRevealed) {
+            this.addToMap(this.healthBarEndboss);
+        }
         // ----- Fixed Objects here ---- //
 
         this.ctx.translate(this.camera_x, 0);

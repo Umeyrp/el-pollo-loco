@@ -155,34 +155,66 @@ class Character extends MovableObject {
     }
 
     /**
-     * Polls the keyboard 60 times per second and triggers movement, jumping,
-     * or bottle throwing accordingly. It also updates the camera position.
+     * Starts the 60Hz keyboard polling loop.
      * @returns {void}
      */
     checkButtonInterval() {
-        this.buttonsInterval = setInterval(() => {
-            if (this.world.keyboard.RIGHT && this.x < this.getMaxReachableX()) {
-                this.moveRight();
-                this.otherDirection = false;
-            }
+        this.buttonsInterval = setInterval(
+            () => this.handleButtonInput(),
+            1000 / 60,
+        );
+    }
 
-            if (this.world.keyboard.LEFT && this.x > 0) {
-                this.moveLeft();
-                this.otherDirection = true;
-            }
+    /**
+     * Reads the current keyboard state and triggers movement, jumping, and
+     * bottle throwing accordingly. Also updates the camera position.
+     * @returns {void}
+     */
+    handleButtonInput() {
+        this.handleHorizontalMovement();
+        this.handleJumpInput();
+        this.handleThrowInput();
+        this.world.camera_x = -this.x + 100;
+    }
 
-            if (this.world.keyboard.UP && !this.isAboveGround()) {
-                this.jump();
-                Sound.playSound(Sound.CHARACTER_JUMP);
-                this.resetSleepingState();
-            }
+    /**
+     * Moves the character left or right based on keyboard input, respecting
+     * level boundaries.
+     * @returns {void}
+     */
+    handleHorizontalMovement() {
+        if (this.world.keyboard.RIGHT && this.x < this.getMaxReachableX()) {
+            this.moveRight();
+            this.otherDirection = false;
+        }
+        if (this.world.keyboard.LEFT && this.x > 0) {
+            this.moveLeft();
+            this.otherDirection = true;
+        }
+    }
 
-            if (this.world.keyboard.DOWN) {
-                this.throwBottle();
-                this.resetSleepingState();
-            }
-            this.world.camera_x = -this.x + 100;
-        }, 1000 / 60);
+    /**
+     * Triggers a jump and its sound if the jump key is pressed and the
+     * character is on the ground.
+     * @returns {void}
+     */
+    handleJumpInput() {
+        if (this.world.keyboard.UP && !this.isAboveGround()) {
+            this.jump();
+            Sound.playSound(Sound.CHARACTER_JUMP);
+            this.resetSleepingState();
+        }
+    }
+
+    /**
+     * Triggers a bottle throw if the throw key is pressed.
+     * @returns {void}
+     */
+    handleThrowInput() {
+        if (this.world.keyboard.DOWN) {
+            this.throwBottle();
+            this.resetSleepingState();
+        }
     }
 
     /**
@@ -194,42 +226,65 @@ class Character extends MovableObject {
     getMaxReachableX() {
         const endboss = this.world.endboss;
         if (endboss && !endboss.isDead()) {
-            return Math.min(this.world.level.level_end_x, endboss.x - 40);
+            return endboss.x - 40;
         }
         return this.world.level.level_end_x;
     }
 
     /**
-     * Checks the character's state 20 times per second (dead, hurt, in the
-     * air, walking, or idle) and plays the matching animation or sound.
+     * Starts the 20Hz status/animation loop.
      * @returns {void}
      */
     checkStatusInterval() {
-        this.statusInterval = setInterval(() => {
-            if (this.isDead()) {
-                this.resetStatus();
-                this.playAnimation(this.IMAGES_DEAD);
-                Sound.playSound(Sound.CHARACTER_DEAD);
-                clearInterval(this.buttonsInterval);
-                clearInterval(this.statusInterval);
-            } else if (this.isHurt()) {
-                this.resetSleepingState();
-                this.playAnimation(this.IMAGES_HURT);
-            } else if (this.isAboveGround()) {
-                this.resetStatus();
-                this.playAnimation(this.IMAGES_JUMPING);
-            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                this.resetSleepingState();
-                this.playAnimation(this.IMAGES_WALKING);
-                if (!this.isWalking) {
-                    Sound.playSound(Sound.CHARACTER_WALK);
-                    this.isWalking = true;
-                }
-            } else {
-                this.stopWalkingSound();
-                this.playSleepingAnimation();
-            }
-        }, 50);
+        this.statusInterval = setInterval(() => this.updateStatus(), 50);
+    }
+
+    /**
+     * Checks the character's state (dead, hurt, in the air, walking, or idle)
+     * and plays the matching animation or sound.
+     * @returns {void}
+     */
+    updateStatus() {
+        if (this.isDead()) {
+            this.handleDeadStatus();
+        } else if (this.isHurt()) {
+            this.resetSleepingState();
+            this.playAnimation(this.IMAGES_HURT);
+        } else if (this.isAboveGround()) {
+            this.resetStatus();
+            this.playAnimation(this.IMAGES_JUMPING);
+        } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.handleWalkingStatus();
+        } else {
+            this.stopWalkingSound();
+            this.playSleepingAnimation();
+        }
+    }
+
+    /**
+     * Plays the death animation and sound, then stops all character loops.
+     * @returns {void}
+     */
+    handleDeadStatus() {
+        this.resetStatus();
+        this.playAnimation(this.IMAGES_DEAD);
+        Sound.playSound(Sound.CHARACTER_DEAD);
+        clearInterval(this.buttonsInterval);
+        clearInterval(this.statusInterval);
+    }
+
+    /**
+     * Plays the walking animation and starts the walking sound if it is not
+     * already playing.
+     * @returns {void}
+     */
+    handleWalkingStatus() {
+        this.resetSleepingState();
+        this.playAnimation(this.IMAGES_WALKING);
+        if (!this.isWalking) {
+            Sound.playSound(Sound.CHARACTER_WALK);
+            this.isWalking = true;
+        }
     }
 
     /**
@@ -294,18 +349,27 @@ class Character extends MovableObject {
     playSleepingAnimation() {
         this.setCharacterAsleep();
         const now = Date.now();
-        if (now - this.lastSleepingFrameTime >= 1000) {
-            this.sleepingFrameIndex++;
-            const loopStart = this.IMAGES_SLEEPING.length - 10;
-            if (this.sleepingFrameIndex == loopStart) {
-                Sound.playSound(Sound.CHARACTER_SNORE);
-            }
-            if (this.sleepingFrameIndex >= this.IMAGES_SLEEPING.length) {
-                this.sleepingFrameIndex = loopStart;
-            }
-            this.loadImage(this.IMAGES_SLEEPING[this.sleepingFrameIndex]);
-            this.lastSleepingFrameTime = now;
+        if (now - this.lastSleepingFrameTime < 1000) return;
+        this.advanceSleepingFrame();
+        this.lastSleepingFrameTime = now;
+    }
+
+    /**
+     * Advances the sleeping animation by one frame, looping over the last 10
+     * frames once the falling-asleep sequence is done, and starts the snoring
+     * sound at the loop start.
+     * @returns {void}
+     */
+    advanceSleepingFrame() {
+        this.sleepingFrameIndex++;
+        const loopStart = this.IMAGES_SLEEPING.length - 10;
+        if (this.sleepingFrameIndex == loopStart) {
+            Sound.playSound(Sound.CHARACTER_SNORE);
         }
+        if (this.sleepingFrameIndex >= this.IMAGES_SLEEPING.length) {
+            this.sleepingFrameIndex = loopStart;
+        }
+        this.loadImage(this.IMAGES_SLEEPING[this.sleepingFrameIndex]);
     }
 
     /**
@@ -319,7 +383,6 @@ class Character extends MovableObject {
             this.sleepingFrameIndex = 0;
             this.lastSleepingFrameTime = Date.now();
             this.loadImage(this.IMAGES_SLEEPING[0]);
-            return;
         }
     }
 
