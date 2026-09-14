@@ -5,9 +5,9 @@ class CollectableObject extends DrawableObject {
         bottom: 7,
         left: 10
     }
-    x = 300 + Math.random() * 600;
 
-    constructor() {
+    constructor(baseX) {
         super();
+        this.x = baseX !== undefined ? baseX + Math.random() * 100 : 300 + Math.random() * 600;
     }
 }

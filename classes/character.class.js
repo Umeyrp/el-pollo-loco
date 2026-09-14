@@ -71,7 +71,7 @@ class Character extends MovableObject {
         top: 115,
         right: 20,
         bottom: 10,
-        left: 20
+        left: 20,
     };
     isWalking;
     isSleeping = false;
@@ -100,7 +100,7 @@ class Character extends MovableObject {
 
     checkButtonInterval() {
         this.buttonsInterval = setInterval(() => {
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            if (this.world.keyboard.RIGHT && this.x < this.getMaxReachableX()) {
                 this.moveRight();
                 this.otherDirection = false;
             }
@@ -122,6 +122,14 @@ class Character extends MovableObject {
             }
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
+    }
+
+    getMaxReachableX() {
+        const endboss = this.world.endboss;
+        if (endboss && !endboss.isDead()) {
+            return Math.min(this.world.level.level_end_x, endboss.x - 40);
+        }
+        return this.world.level.level_end_x;
     }
 
     checkStatusInterval() {
@@ -169,7 +177,11 @@ class Character extends MovableObject {
         if (Date.now() - this.lastThrow < 1000) return;
         Sound.playSound(Sound.BOTTLE_THROW);
         this.lastThrow = Date.now();
-        let bottle = new ThrowableObject(this.x + 30, this.y + 150, this.otherDirection);
+        let bottle = new ThrowableObject(
+            this.x + 30,
+            this.y + 150,
+            this.otherDirection,
+        );
         this.world.level.thrownBottles.push(bottle);
         this.bottles -= 1;
         this.world.bottleBar.setPercentage(this.bottles);
@@ -220,4 +232,4 @@ class Character extends MovableObject {
     playHurtSound() {
         Sound.playSound(Sound.CHARACTER_HURT);
     }
-}   
+}

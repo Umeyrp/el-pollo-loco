@@ -9,8 +9,8 @@ class Bottle extends CollectableObject {
     height = 80;
     width = 80;
 
-    constructor() {
-        super();
+    constructor(baseX) {
+        super(baseX);
         this.loadImage("img/6_salsa_bottle/1_salsa_bottle_on_ground.png");
     }
 }

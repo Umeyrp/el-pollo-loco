@@ -1,70 +1,253 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./style.css" />
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="img/3_enemies_chicken/chicken_small/1_walk/1_w.png"
+        />
+        <title>ElPolloLoco</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
-    <link rel="icon" type="image/x-icon" href="img/3_enemies_chicken/chicken_small/1_walk/1_w.png">
-    <title>ElPolloLoco</title>
-</head>
+    <body>
+        <h1>El pollo loco</h1>
+        <div id="rotateOverlay" class="rotate-overlay">
+            <div class="rotate-icon"></div>
+            <p>Turn your device to play</p>
+        </div>
+        <div class="game-container">
+            <canvas id="canvas" width="720" height="480"></canvas>
+            <div id="startscreen">
+                <img
+                    src="./img/9_intro_outro_screens/start/startscreen_1.png"
+                    class="game_screens"
+                    alt="Startscreen"
+                />
+                <div class="menu">
+                    <button onclick="startGame()">Start Game</button>
+                    <button onclick="showControls()">Controls</button>
+                    <a href="./impressum.html">
+                        <button>Imprint</button>
+                    </a>
+                </div>
+            </div>
+            <div id="controlsOverlay" class="controls-overlay" hidden>
+                <div class="window">
+                    <h2>Controls</h2>
+                    <ul>
+                        <li><kbd>W</kbd> / <kbd>Space</kbd> — Jump</li>
+                        <li><kbd>A</kbd> / <kbd>D</kbd> — Move Left/Right</li>
+                        <li><kbd>S</kbd> — Throw Bottle</li>
+                    </ul>
+                    <button onclick="hideControls()">Ok</button>
+                </div>
+            </div>
+            <div id="winscreen" hidden>
+                <img
+                    src="./img/You won, you lost/You Win A.png"
+                    class="game_screens"
+                    alt="WinScreen"
+                />
+                <div class="end-menu">
+                    <button onclick="restartGame()">Restart</button>
+                    <button onclick="goHome()">Home</button>
+                </div>
+            </div>
 
-<body>
-    <h1>El pollo loco</h1>
-    <div class="game-container">
-        <canvas id="canvas" width="720" height="480"></canvas>
-        <div id="startscreen">
-            <img src="./img/9_intro_outro_screens/start/startscreen_1.png" class="game_screens" alt="Startscreen">
-            <div class="menu">
-                <button onclick="startGame()">Start Game</button>
-                <button onclick="showControls()">Controls</button>
-                <a href="./impressum.html">
-                    <button>Imprint</button>
-                </a>
+            <div id="gameoverscreen" hidden>
+                <img
+                    src="./img/You won, you lost/Game over A.png"
+                    class="game_screens"
+                    alt="GameOverScreen"
+                />
+                <div class="end-menu">
+                    <button onclick="restartGame()">Restart</button>
+                    <button onclick="goHome()">Home</button>
+                </div>
+            </div>
+            <button
+                id="muteButton"
+                onclick="toggleMute()"
+                aria-label="Toggle sound"
+            >
+                <svg
+                    id="volumeOnIcon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    hidden
+                >
+                    <path
+                        d="M3.15838 13.9306C2.44537 12.7423 2.44537 11.2577 3.15838 10.0694V10.0694C3.37596 9.70674 3.73641 9.45272 4.1511 9.36978L5.84413 9.03117C5.94499 9.011 6.03591 8.95691 6.10176 8.87788L8.17085 6.39498C9.3534 4.97592 9.94468 4.26638 10.4723 4.45742C11 4.64846 11 5.57207 11 7.41928L11 16.5807C11 18.4279 11 19.3515 10.4723 19.5426C9.94468 19.7336 9.3534 19.0241 8.17085 17.605L6.10176 15.1221C6.03591 15.0431 5.94499 14.989 5.84413 14.9688L4.1511 14.6302C3.73641 14.5473 3.37596 14.2933 3.15838 13.9306V13.9306Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M15.5355 8.46447C16.4684 9.39732 16.9948 10.6611 17 11.9803C17.0052 13.2996 16.4888 14.5674 15.5633 15.5076"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                    <path
+                        d="M19.6569 6.34314C21.1494 7.83572 21.9916 9.85769 21.9999 11.9685C22.0083 14.0793 21.182 16.1078 19.7012 17.6121"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+                <svg
+                    id="volumeOffIcon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M3.15838 13.9306C2.44537 12.7423 2.44537 11.2577 3.15838 10.0694V10.0694C3.37596 9.70674 3.73641 9.45272 4.1511 9.36978L5.84413 9.03117C5.94499 9.011 6.03591 8.95691 6.10176 8.87788L8.17085 6.39498C9.3534 4.97592 9.94468 4.26638 10.4723 4.45742C11 4.64846 11 5.57207 11 7.41928L11 16.5807C11 18.4279 11 19.3515 10.4723 19.5426C9.94468 19.7336 9.3534 19.0241 8.17085 17.605L6.10176 15.1221C6.03591 15.0431 5.94499 14.989 5.84413 14.9688L4.1511 14.6302C3.73641 14.5473 3.37596 14.2933 3.15838 13.9306V13.9306Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    />
+                    <path
+                        d="M15 15L21 9"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                    <path
+                        d="M21 15L15 9"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+            </button>
+            <button id="fullscreenButton" onclick="toggleFullscreen()">
+                <svg
+                    id="fullscreenIcon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+            </button>
+            <div id="touchControls" class="touch-controls">
+                <div class="touch-left">
+                    <button
+                        id="btnLeft"
+                        class="touch-btn"
+                        aria-label="Move left"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M11 9L8 12M8 12L11 15M8 12H16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    </button>
+                    <button
+                        id="btnRight"
+                        class="touch-btn"
+                        aria-label="Move right"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M13 15L16 12M16 12L13 9M16 12H8M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="touch-right">
+                    <button
+                        id="btnThrow"
+                        class="touch-btn"
+                        aria-label="Throw bottle"
+                    >
+                        <svg
+                            version="1.1"
+                            id="Capa_1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                            viewBox="0 0 420 420.001"
+                            xml:space="preserve"
+                        >
+                            <g>
+                                <g>
+                                    <path
+                                        d="M239.115,135.275V31.84c0-3.783-3.065-6.85-6.852-6.85h-3.156l3.182-16.868c0.38-2.004-0.155-4.072-1.457-5.643
+			C229.531,0.909,227.598,0,225.559,0h-31.12c-2.039,0-3.973,0.909-5.274,2.479s-1.835,3.639-1.458,5.643l3.183,16.868h-3.156
+			c-3.784,0-6.852,3.067-6.852,6.85v103.435c-10.26,6.418-39.028,26.64-39.028,51.561V413.15c0,3.783,3.068,6.851,6.851,6.851
+			h122.59c3.78,0,6.852-3.065,6.852-6.851V186.835C278.144,161.915,249.375,141.693,239.115,135.275z M251.488,339.189h-82.98v-94.3
+			h82.98V339.189z"
+                                        fill="currentColor"
+                                    />
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
+                    <button id="btnJump" class="touch-btn" aria-label="Jump">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M15 11L12 8M12 8L9 11M12 8V16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
-        <div id="winscreen" hidden>
-            <img src="./img/You won, you lost/You Win A.png" class="game_screens" alt="WinScreen">
-            <div class="end-menu">
-                <button onclick="restartGame()">Restart</button>
-                <button onclick="goHome()">Home</button>
-            </div>
-        </div>
-
-        <div id="gameoverscreen" hidden>
-            <img src="./img/You won, you lost/Game over A.png" class="game_screens" alt="GameOverScreen">
-            <div class="end-menu">
-                <button onclick="restartGame()">Restart</button>
-                <button onclick="goHome()">Home</button>
-            </div>
-        </div>
-        <button id="muteButton" onclick="toggleMute()">
-            <img id="muteIcon" src="./img/volume-mute.png" alt="Sound">
-        </button>
-    </div>
-</body>
-<script src="./classes/drawable-object.class.js"></script>
-<script src="./classes/movable-object.class.js"></script>
-<script src="./classes/status-bar.class.js"></script>
-<script src="./classes/healthBar.class.js"></script>
-<script src="./classes/coinBar.class.js"></script>
-<script src="./classes/bottleBar.class.js"></script>
-<script src="./classes/chicken.class.js"></script>
-<script src="./classes/chick.class.js"></script>
-<script src="./classes/endboss.class.js"></script>
-<script src="./classes/character.class.js"></script>
-<script src="./classes/cloud.class.js"></script>
-<script src="./classes/world.class.js"></script>
-<script src="./classes/background-object.class.js"></script>
-<script src="./classes/keyboard.class.js"></script>
-<script src="./classes/level.class.js"></script>
-<script src="./classes/throwable-object.class.js"></script>
-<script src="./classes/collectableObjects.class.js"></script>
-<script src="./classes/coin.class.js"></script>
-<script src="./classes/bottle.class.js"></script>
-<script src="./levels/level1.js"></script>
-<script src="./classes/sound.class.js"></script>
-<script src="./js/settings.js"></script>
-<script src="./js/game.js"></script>
-
+    </body>
+    <script src="./classes/drawable-object.class.js"></script>
+    <script src="./classes/movable-object.class.js"></script>
+    <script src="./classes/status-bar.class.js"></script>
+    <script src="./classes/healthBar.class.js"></script>
+    <script src="./classes/coinBar.class.js"></script>
+    <script src="./classes/bottleBar.class.js"></script>
+    <script src="./classes/chicken.class.js"></script>
+    <script src="./classes/chick.class.js"></script>
+    <script src="./classes/endboss.class.js"></script>
+    <script src="./classes/character.class.js"></script>
+    <script src="./classes/cloud.class.js"></script>
+    <script src="./classes/world.class.js"></script>
+    <script src="./classes/background-object.class.js"></script>
+    <script src="./classes/keyboard.class.js"></script>
+    <script src="./classes/level.class.js"></script>
+    <script src="./classes/throwable-object.class.js"></script>
+    <script src="./classes/collectableObjects.class.js"></script>
+    <script src="./classes/coin.class.js"></script>
+    <script src="./classes/bottle.class.js"></script>
+    <script src="./levels/level1.js"></script>
+    <script src="./classes/sound.class.js"></script>
+    <script src="./js/settings.js"></script>
+    <script src="./js/game.js"></script>
 </html>
