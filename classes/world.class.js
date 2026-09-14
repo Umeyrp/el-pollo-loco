@@ -1,3 +1,7 @@
+/**
+ * Controls the game world, including the character, enemies,
+ * collisions, objects and rendering.
+ */
 class World {
     character = new Character();
     level = createLevel();
@@ -6,10 +10,12 @@ class World {
     ctx;
     keyboard;
     camera_x = 0;
+
     healthBarCharacter = new HealthBar(
         this.character.energy,
         this.character.MAX_ENERGY,
     );
+
     healthBarEndboss = new HealthBar(
         this.endboss.energy,
         this.endboss.MAX_ENERGY,
@@ -17,9 +23,16 @@ class World {
         undefined,
         HealthBar.IMAGES_ENDBOSS,
     );
+
     coinBar = new CoinBar(START_COINS, MAX_COINS);
     bottleBar = new BottleBar(this.character.bottles, MAX_BOTTLES);
 
+    /**
+     * Initializes the game world and starts the game loop.
+     *
+     * @param {HTMLCanvasElement} canvas - Canvas used to render the game.
+     * @param {Keyboard} keyboard - Keyboard input handler.
+     */
     constructor(canvas, keyboard) {
         Sound.playSound(Sound.BACKGROUND_MUSIC);
         this.ctx = canvas.getContext("2d");
@@ -30,6 +43,9 @@ class World {
         this.run();
     }
 
+    /**
+     * Starts the game loop and regularly checks the game state.
+     */
     run() {
         setInterval(() => {
             this.checkGameOver();
@@ -41,28 +57,45 @@ class World {
         }, 1000 / 60);
     }
 
+    /**
+     * Checks all types of collisions in the game.
+     */
     checkCollisions() {
         this.checkCharacterEnemyCollisions();
         this.checkBottleCollisions();
         this.checkCollectableCollisions();
     }
 
+    /**
+     * Removes a bottle shortly after it hits an enemy.
+     *
+     * @param {number} bottleIndex - Index of the bottle to remove.
+     */
     removeHitBottles(bottleIndex) {
         setTimeout(() => {
             this.level.thrownBottles.splice(bottleIndex, 1);
         }, 100);
     }
 
+    /**
+     * Updates the position of the endboss health bar.
+     */
     moveEndbossHealthbar() {
         this.healthBarEndboss.x = this.endboss.x + 55;
     }
 
+    /**
+     * Removes bottles that have left the playable area.
+     */
     removeOutOfWindowBottles() {
         this.level.thrownBottles = this.level.thrownBottles.filter((bottle) => {
             return bottle.y <= 500;
         });
     }
 
+    /**
+     * Removes enemies that have been dead for more than 300 milliseconds.
+     */
     removeDeadEnemies() {
         this.level.enemies = this.level.enemies.filter((enemy) => {
             if (!enemy.isDead()) {
@@ -74,6 +107,7 @@ class World {
 
     /**
      * Checks whether the character collides with an enemy and responds accordingly.
+     *
      * @returns {void}
      */
     checkCharacterEnemyCollisions() {
@@ -101,6 +135,9 @@ class World {
         });
     }
 
+    /**
+     * Checks whether thrown bottles hit any enemies.
+     */
     checkBottleCollisions() {
         this.level.enemies.forEach((enemy) => {
             this.level.thrownBottles.forEach((bottle, index) => {
@@ -108,17 +145,22 @@ class World {
                     Sound.playSound(Sound.BOTTLE_HIT);
                     bottle.splashed = true;
                     this.character.bottleHitEnemy(enemy);
+
                     if (enemy instanceof Endboss) {
                         this.healthBarEndboss.setPercentage(
                             this.endboss.energy,
                         );
                     }
+
                     this.removeHitBottles(index);
                 }
             });
         });
     }
 
+    /**
+     * Checks whether the character collects coins or bottles.
+     */
     checkCollectableCollisions() {
         this.level.collectableObjects.forEach((object, index) => {
             if (this.character.isColliding(object)) {
@@ -139,51 +181,81 @@ class World {
         });
     }
 
+    /**
+     * Gives the character access to the current game world.
+     */
     linkWorldToCharacter() {
         this.character.world = this;
     }
 
+    /**
+     * Draws a moving object on the canvas and handles its direction.
+     *
+     * @param {MovableObject} movingObject - Object to draw.
+     */
     addToMap(movingObject) {
         if (movingObject.otherDirection) {
             this.flipImage(movingObject);
         }
+
         movingObject.draw(this.ctx);
         movingObject.drawFrame(this.ctx);
+
         if (movingObject.otherDirection) {
             this.flipImageBack(movingObject);
         }
     }
 
+    /**
+     * Draws multiple objects on the canvas.
+     *
+     * @param {MovableObject[]} objects - Objects to draw.
+     */
     addObjectsToMap(objects) {
         objects.forEach((object) => {
             this.addToMap(object);
         });
     }
 
+    /**
+     * Clears and redraws the complete game world every animation frame.
+     */
     drawWorld() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
+
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
         this.addToMap(this.healthBarEndboss);
-        this.ctx.translate(-this.camera_x, 0); //Fix Back
+
+        this.ctx.translate(-this.camera_x, 0);
+
         // ----- Fixed Objects here ---- //
         this.addToMap(this.healthBarCharacter);
         this.addToMap(this.coinBar);
         this.addToMap(this.bottleBar);
         // ----- Fixed Objects here ---- //
-        this.ctx.translate(this.camera_x, 0); //Fix Forward
+
+        this.ctx.translate(this.camera_x, 0);
+
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.collectableObjects);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.thrownBottles);
+
         this.ctx.translate(-this.camera_x, 0);
+
         let self = this;
         requestAnimationFrame(function () {
             self.drawWorld();
         });
     }
 
+    /**
+     * Flips a moving object horizontally before drawing it.
+     *
+     * @param {MovableObject} movingObject - Object to flip.
+     */
     flipImage(movingObject) {
         this.ctx.save();
         this.ctx.translate(movingObject.width, 0);
@@ -191,11 +263,19 @@ class World {
         movingObject.x = movingObject.x * -1;
     }
 
+    /**
+     * Restores the canvas after drawing a flipped object.
+     *
+     * @param {MovableObject} movingObject - Object that was flipped.
+     */
     flipImageBack(movingObject) {
         movingObject.x = movingObject.x * -1;
         this.ctx.restore();
     }
 
+    /**
+     * Checks whether the character has died and shows the game-over screen.
+     */
     checkGameOver() {
         if (this.character.isDead()) {
             setTimeout(() => {
@@ -206,6 +286,9 @@ class World {
         }
     }
 
+    /**
+     * Checks whether the endboss has died and shows the win screen.
+     */
     checkWin() {
         if (this.endboss.isDead()) {
             setTimeout(() => {
