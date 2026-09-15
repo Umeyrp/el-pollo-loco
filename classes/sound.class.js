@@ -22,6 +22,9 @@ class Sound {
         0.07,
         true,
     );
+    static GAME_OVER = Sound.create("./audios/game_over.mp3", 0.07);
+    static GAME_WON = Sound.create("./audios/game_won.mp3", 0.07);
+    static DASH = Sound.create("./audios/dash.wav", 0.2);
 
     /**
      * Contains all sounds that can be controlled at once.

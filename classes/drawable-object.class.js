@@ -18,6 +18,9 @@ class DrawableObject {
     /** @type {number} Width of the object in pixels. */
     width = 100;
 
+    /** @type {boolean} Turn on/off hitboxes */
+    showHitboxes = false;
+
     /**
      * Cache for images already loaded so animation frames do not need to be
      * loaded repeatedly.
@@ -68,24 +71,30 @@ class DrawableObject {
      */
     drawFrame(ctx) {
         if (
-            this instanceof Character ||
-            this instanceof Chicken ||
-            this instanceof Chick ||
-            this instanceof Endboss ||
-            this instanceof CollectableObject ||
-            this instanceof ThrowableObject
+            this.showHitboxes &&
+            (this instanceof Character ||
+                this instanceof Chicken ||
+                this instanceof Chick ||
+                this instanceof Endboss ||
+                this instanceof CollectableObject ||
+                this instanceof ThrowableObject)
         ) {
-            // ctx.beginPath();
-            // ctx.lineWidth = '1';
-            // ctx.strokeStyle = 'blue';
-            // ctx.rect(this.x, this.y, this.width, this.height);
-            // ctx.stroke();
-            //Offset Frame
-            // ctx.beginPath();
-            // ctx.lineWidth = '1';
-            // ctx.strokeStyle = 'red';
-            // ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.left - this.offset.right, this.height - this.offset.top - this.offset.bottom);
-            // ctx.stroke();
+            ctx.beginPath();
+            ctx.lineWidth = "1";
+            ctx.strokeStyle = "blue";
+            ctx.rect(this.x, this.y, this.width, this.height);
+            ctx.stroke();
+            // Offset Frame
+            ctx.beginPath();
+            ctx.lineWidth = "1";
+            ctx.strokeStyle = "red";
+            ctx.rect(
+                this.x + this.offset.left,
+                this.y + this.offset.top,
+                this.width - this.offset.left - this.offset.right,
+                this.height - this.offset.top - this.offset.bottom,
+            );
+            ctx.stroke();
         }
     }
 }

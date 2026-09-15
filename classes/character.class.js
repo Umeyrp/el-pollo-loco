@@ -168,9 +168,11 @@ class Character extends MovableObject {
     /**
      * Reads the current keyboard state and triggers movement, jumping, and
      * bottle throwing accordingly. Also updates the camera position.
+     * Frozen entirely while a win/lose outro sequence is playing.
      * @returns {void}
      */
     handleButtonInput() {
+        if (this.world.outroActive) return;
         this.handleHorizontalMovement();
         this.handleJumpInput();
         this.handleThrowInput();

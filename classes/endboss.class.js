@@ -13,13 +13,22 @@ class Endboss extends MovableObject {
     y = -20;
 
     /** @type {number} Initial X position at the end of the level. */
-    x = 2300;
+    x = 4000;
 
     /** @type {number} Current energy/health points. */
     energy = 750;
 
     /** @type {number} Maximum energy/health points. */
     MAX_ENERGY = 750;
+
+    /** @type {number} Normal walking speed. */
+    normalSpeed = 0.75;
+
+    /** @type {number} Boosted walking speed. */
+    boostSpeed = 4;
+
+    /** @type {boolean} Whether the boss is currently charging. */
+    isCharging = false;
 
     /**
      * Hitbox offsets for the final boss.
@@ -63,8 +72,35 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        this.speed = 0.75 + Math.random() * 0.25;
+        this.normalSpeed = 0.75 + Math.random() * 0.25;
+        this.speed = this.normalSpeed;
         this.animate();
+        this.startCharge();
+    }
+
+    /**
+     * Starts a random boss charge after a short delay.
+     * @returns {void}
+     */
+    startCharge() {
+        const delay = 3000;
+
+        setTimeout(() => {
+            if (this.isDead()) return;
+
+            this.isCharging = true;
+            this.speed = 4;
+
+            if (this.world.isEndbossVisible()) {
+                Sound.playSound(Sound.DASH);
+            }
+
+            setTimeout(() => {
+                this.isCharging = false;
+                this.speed = this.normalSpeed;
+                this.startCharge();
+            }, 1200);
+        }, delay);
     }
 
     /**
